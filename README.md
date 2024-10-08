@@ -7,7 +7,7 @@
 
 EMAIL_USER=메일주소
 EMAIL_PASS=앱 비밀번호
-PASSWORD=비밀번호
+PASSWORD=비밀번호ㅁ
 
 Test는 /apiTest.js 사용
 
