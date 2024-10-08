@@ -1,17 +1,26 @@
 require("dotenv").config(); // dotenv 패키지 추가
-
-// server.js
 const express = require("express");
+const serverless = require("serverless-http");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const router = express.Router();
 
 app.use(bodyParser.json());
 
-app.post("/send-email", async (req, res) => {
-  const { to, subject, text } = req.body;
+router.get("/", (req, res) => {
+  res.send("App is running ... 2");
+});
+
+router.post("/send-email", async (req, res) => {
+  const { to, subject, text, password } = req.body;
+  console.log(req.body);
+  console.log(process.env.EMAIL_USER);
+  console.log(process.env.PASSWORD);
+  if (password !== process.env.PASSWORD) {
+    return res.status(403).send("Invalid password");
+  }
   // Nodemailer transporter 설정
   const transporter = nodemailer.createTransport({
     service: "gmail", // 사용하고자 하는 이메일 서비스
@@ -37,6 +46,13 @@ app.post("/send-email", async (req, res) => {
   }
 });
 
+app.use("/api/", router);
+
+/**
+ * 해당 부분으로 테스트
+ *
+ */
+const PORT = process.env.PORT || 3000; // 기본 포트 설정
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
